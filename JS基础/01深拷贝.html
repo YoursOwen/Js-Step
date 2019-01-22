@@ -7,7 +7,7 @@
   <title>Document</title>
 </head>
 <body>
-
+  <div></div>
 </body>
 </html>
 <script>
@@ -23,7 +23,12 @@
   //此时修改test2(对象是引用类型,修改的是堆内存中的值)
   test2.a = "c"
   test.a === 'c'// 为true
-//原因两个变量指向同一块内存空间
+//原因两个变量指向同一块内存空间,会造成数据共享
+
+
+
+
+
 
 // 2.深拷贝之js数据类型
 /*
@@ -34,7 +39,107 @@ String    文本信息
 Number    数字信息
 
 Object    它是一系列属性的无序集合，包括函数Function/数组Array
-/
+*/
+
+// 3.着手封装判断类型的函数 (函数式思想)
+function type(obj) {
+  let toSring = Object.prototype.toString
+
+  let map = {
+      '[object Boolean]'  : 'boolean',
+      '[object Number]'   : 'number',
+      '[object String]'   : 'string',
+      '[object Function]' : 'function',
+      '[object Array]'    : 'array',
+      '[object Date]'     : 'date',
+      '[object RegExp]'   : 'regExp',
+      '[object Undefined]': 'undefined',
+      '[object Null]'     : 'null',
+      '[object Object]'   : 'object'
+  }
+  return map[toSring.call(obj)]
+}
+// 解析：这个函数的作用就是将对象传入进来,用toString拿到对象的tosting后的类型，
+// 作为键名，return里面的键值（即拿到对象的真实类型）
+
+// 4.实现deepClone
+// 对于值数据类型直接赋值即可,对于引用数据类型（object）还需再次遍历，递归赋值
+function deepClone(data) {
+  let t = type(data);
+  let newObj;
+
+  if(t === "array") {
+    newObj = []
+  }else if(t === "object") {
+    newObj = {}
+  }else {
+    return data;
+  }
+
+  if(t === "array") {
+    for ( let i = 0; i < data.length; i++) {
+      newObj.push(deepClone(data[i]))
+    }
+  } else if(t === "object") {
+    //遍历对象
+    for(i in data) {
+      newObj[i] = deepClone(data[i])
+    }
+  }
+return newObj;
+
+}
+
+// 测试功能代码
+// let arr = [
+//   1,
+//   2,
+//   [3,4,5],
+//   [3,5,8]
+// ]
+// let newArr = deepClone(arr)
+
+// newArr[1] = [0,0,0]
+
+// console.log(arr[1])
+
+
+
+
+// 5.element元素标签
+Object.prototype.toString.call(document.getElementsByTagName('div')[0]);
+
+//答案是[object HTMLDivElement]
+
+// 有时候保存了dom元素， 一不小心进行深拷贝，上面的深拷贝函数就缺少了对Element元素的判断。
+//而判断Element元素要使用instanceof来判断。
+// 因为对于不同的标签，tostring会返回对应不同的标签的构造函数。
+
+// 修改code:
+function newType(obj) {
+  let toSring = Object.prototype.toString
+
+  let map = {
+      '[object Boolean]'  : 'boolean',
+      '[object Number]'   : 'number',
+      '[object String]'   : 'string',
+      '[object Function]' : 'function',
+      '[object Array]'    : 'array',
+      '[object Date]'     : 'date',
+      '[object RegExp]'   : 'regExp',
+      '[object Undefined]': 'undefined',
+      '[object Null]'     : 'null',
+      '[object Object]'   : 'object'
+  }
+  //增加了Element元素标签的过滤
+    if(obj instanceof Element) {
+    return 'element'
+  }
+  return map[toSring.call(obj)]
+}
+
+
+
 
 
 
