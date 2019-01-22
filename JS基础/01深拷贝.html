@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+  // 1.浅析 浅拷贝的缺点
+  // code:
+  let test = {
+    a: "a",
+    b: "b"
+  }
+  //将test的值赋值给test2时
+  let test2 = test
+  // console.log(test2);
+  //此时修改test2(对象是引用类型,修改的是堆内存中的值)
+  test2.a = "c"
+  test.a === 'c'// 为true
+//原因两个变量指向同一块内存空间
+
+// 2.深拷贝之js数据类型
+/*
+undifined 只有一个值undifined,声明为赋值
+null      也只有一个值null，空的对象引用
+Boolean   两种取值，true/false
+String    文本信息
+Number    数字信息
+
+Object    它是一系列属性的无序集合，包括函数Function/数组Array
+/
+
+
+
+
+
+</script>
